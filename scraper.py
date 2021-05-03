@@ -8,7 +8,7 @@ general_url = "https://www.ericthecarguy.com/forums/forum/stay-dirty-lounge/serv
 filename = "scraped_info.csv"
 f = open(filename, "a")
 
-headers = "Date Posted, Author, Title of Post, Post Description\n"
+headers = "Date Posted,Author,Title of Post,Post Description\n"
 
 f.write(headers)
 
