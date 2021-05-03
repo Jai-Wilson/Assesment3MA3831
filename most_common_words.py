@@ -5,6 +5,9 @@ from collections import Counter
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
+from os import path
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 
 def get_top_words(input_string):
 
@@ -62,6 +65,13 @@ plt.xlabel("Most common words")
 plt.ylabel("Frequency")
 plt.title("Most common words retrieved from ErictheCarGuy")
 plt.show()
+
+# try a wordcloud
+# wordcloud = WordCloud().generate(scraped_data["Title of Post"])
+#
+# plt.imshow(wordcloud, interpolation = 'bilinear', background_color = 'white')
+# plt.axis('off')
+# plt.show()
 
 
 
