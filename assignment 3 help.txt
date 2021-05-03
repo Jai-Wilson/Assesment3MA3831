@@ -1,0 +1,10 @@
+rotate your header when scraping
+
+scrape a few urls to get corpus
+
+derive top 10 keywords
+
+simple prototype approach, what is tweeted about most etc
+could be 10 most popular themes
+
+ericthecarguy - go across BMW forums - scrape them - get corpus
