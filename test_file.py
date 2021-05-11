@@ -1,23 +1,70 @@
-# pip install -U spacy
-# python -m spacy download en_core_web_sm
 import spacy
+import pandas as pd
+from spacy import displacy
+import nltk
+from nltk import word_tokenize, pos_tag, ne_chunk
+import tqdm
+nlp = spacy.load("en_core_web_sm") # might need to use large?
 
-# Load English tokenizer, tagger, parser and NER
-nlp = spacy.load("en_core_web_sm")
+scraped_data = pd.read_csv("scraped_info.csv")
 
-# Process whole documents
-text = ("When Sebastian Thrun started working on self-driving cars at "
-        "Google in 2007, few people outside of the company took him "
-        "seriously. “I can tell you very senior CEOs of major American "
-        "car companies would shake my hand and turn away because I wasn’t "
-        "worth talking to,” said Thrun, in an interview with Recode earlier "
-        "this week.")
-doc = nlp(text)
+scraped_data = scraped_data[["Title of Post", "Post Description"]]
 
-# Analyze syntax
-print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+scraped_data["Title of Post"] = scraped_data["Title of Post"].str.encode("ascii", "ignore").str.decode("ascii")
+scraped_data["Post Description"] = scraped_data["Post Description"].str.encode("ascii", "ignore").str.decode("ascii")
 
-# Find named entities, phrases and concepts
-for entity in doc.ents:
-    print(entity.text, entity.label_)
+# change everything in dataframe to lowercase
+#scraped_data["Title of Post"] = scraped_data["Title of Post"].str.lower()
+#scraped_data["Post Description"] = scraped_data["Post Description"].str.lower()
+
+titles = scraped_data["Title of Post"]
+titles = titles.tolist()
+
+descriptions = scraped_data["Post Description"]
+descriptions = descriptions.tolist()
+
+print(titles[0])
+print(descriptions[0])
+
+words = word_tokenize(titles[0])
+print(words)
+
+pos_tags = pos_tag(words)
+print(pos_tags)
+
+named_entities = ne_chunk(pos_tags)
+print(named_entities)
+
+
+title_raw = nlp(titles[0])
+print(title_raw.ents)
+for word in title_raw.ents:
+    # the label is stored as a string, organisation is "ORG"
+    label = word.label_
+    print(word.text, word.label_)
+
+# descriptions = scraped_data["Post Description"]
+# descriptions = descriptions.tolist()
+organisations = []
+
+
+for description in tqdm.tqdm(descriptions):
+    try:
+        #print("new description")
+        description_raw = nlp(description)
+        for word in description_raw.ents:
+            if word.label_ == "ORG":
+                organisations.append(word.text)
+            #print(word.text, word.label_)
+    except:
+        pass
+
+print(organisations)
+
+
+
+
+
+
+
+
