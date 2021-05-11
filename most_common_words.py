@@ -18,6 +18,31 @@ def get_top_words(input_string):
     print(top_twenty)
     return top_twenty
 
+def remove_stop_words(input_string):
+    filtered_words = []
+
+    for word in input_string:
+        if word not in stop_words:
+            filtered_words.append(word)
+    print(filtered_words)
+    return filtered_words
+
+def plot_most_common_words(plotting_string):
+    top_twenty_after_stop = get_top_words(plotting_string)
+    top_twenty_after_stop_dict = dict(top_twenty_after_stop)
+    keys = top_twenty_after_stop_dict.keys()
+    top_twenty_after_stop = get_top_words(plotting_string)
+    top_twenty_after_stop_dict =dict(top_twenty_after_stop)
+    keys = top_twenty_after_stop_dict.keys()
+    values = top_twenty_after_stop_dict.values()
+    plt.bar(keys, values)
+    plt.xticks(rotation = 75)
+    plt.xlabel("Most common words")
+    plt.ylabel("Frequency")
+    plt.title("Most common words retrieved from ErictheCarGuy")
+    plt.show()
+
+
 
 
 scraped_data = pd.read_csv("scraped_info.csv")
@@ -48,30 +73,15 @@ top_twenty = get_top_words(titles_string)
 #remove stop words
 stop_words = set(stopwords.words('english'))
 
-filtered_titles = []
+filtered_titles = remove_stop_words(titles_string)
 
-for title in titles_string:
-    if title not in stop_words:
-        filtered_titles.append(title)
-print(filtered_titles)
+plot_most_common_words(filtered_titles)
 
-top_twenty_after_stop = get_top_words(filtered_titles)
-top_twenty_after_stop_dict =dict(top_twenty_after_stop)
-keys = top_twenty_after_stop_dict.keys()
-values = top_twenty_after_stop_dict.values()
-plt.bar(keys, values)
-plt.xticks(rotation = 75)
-plt.xlabel("Most common words")
-plt.ylabel("Frequency")
-plt.title("Most common words retrieved from ErictheCarGuy")
-plt.show()
 
-# try a wordcloud
-# wordcloud = WordCloud().generate(scraped_data["Title of Post"])
-#
-# plt.imshow(wordcloud, interpolation = 'bilinear', background_color = 'white')
-# plt.axis('off')
-# plt.show()
+
+
+
+
 
 
 
