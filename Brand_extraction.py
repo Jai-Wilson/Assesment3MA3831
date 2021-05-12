@@ -5,6 +5,7 @@ from nltk import word_tokenize, pos_tag, ne_chunk
 import tqdm
 from collections import Counter
 import operator
+import matplotlib.pyplot as plt
 
 
 nlp = spacy.load("en_core_web_sm") # might need to use large?
@@ -13,6 +14,7 @@ scraped_data = pd.read_csv("scraped_info.csv")
 
 scraped_data = scraped_data[["Title of Post", "Post Description"]]
 
+#remove any not-utf* encoded characters
 scraped_data["Title of Post"] = scraped_data["Title of Post"].str.encode("ascii", "ignore").str.decode("ascii")
 scraped_data["Post Description"] = scraped_data["Post Description"].str.encode("ascii", "ignore").str.decode("ascii")
 
@@ -22,26 +24,6 @@ titles = titles.tolist()
 
 descriptions = scraped_data["Post Description"]
 descriptions = descriptions.tolist()
-
-for i in range(1,20):
-
-
-    words = word_tokenize(titles[i])
-    print(words)
-
-    pos_tags = pos_tag(words)
-    pos_tags_first = pos_tags[0]
-    print(pos_tags)
-
-    named_entities = ne_chunk(pos_tag(words))
-    print(named_entities)
-
-
-
-
-
-
-
 
 
 
@@ -59,36 +41,26 @@ for title in tqdm.tqdm(titles):
 print("titles")
 top_organisations_titles = Counter(organisations_titles)
 top_organisations_titles_ordered = sorted(top_organisations_titles.items(), key=operator.itemgetter(1), reverse=True)
-print(top_organisations_titles_ordered)
+top_ten_organisations = top_organisations_titles_ordered[0:10]
+print(top_ten_organisations)
 
+top_organisations_dict = dict(top_ten_organisations)
 
+# extract the most common brands as a list
+organisations_list = list(top_organisations_dict.keys())
 
+top_ten_keys = top_organisations_dict.keys()
+values = top_organisations_dict.values()
+plt.bar(top_ten_keys, values)
+plt.xticks(rotation=75)
+plt.xlabel("Most commonly recognised entities")
+plt.ylabel("Frequency")
+plt.title("Most common entities recognised in scraped database")
+plt.show()
 
-# descriptions = scraped_data["Post Description"]
-# descriptions = descriptions.tolist()
-organisations_descriptions = []
+columns = ["Title of Post", "Post Decsription"]
 
-
-for description in tqdm.tqdm(descriptions):
-    try:
-        #print("new description")
-        description_raw = nlp(description)
-        for word in description_raw.ents:
-            if word.label_ == "ORG":
-                organisations_descriptions.append(word.text)
-            #print(word.text, word.label_)
-    except:
-        pass
-
-print("descriptions")
-top_organisations_descriptions = Counter(organisations_descriptions)
-top_organisations_descriptions_ordered = sorted(top_organisations_descriptions.items(), key=operator.itemgetter(1), reverse=True)
-print(top_organisations_descriptions_ordered)
-
-
-
-
-
+filtared_dataframe = pd.Dataframe()
 
 
 
