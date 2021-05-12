@@ -7,25 +7,21 @@ from collections import Counter
 import operator
 import matplotlib.pyplot as plt
 
-
-nlp = spacy.load("en_core_web_sm") # might need to use large?
+nlp = spacy.load("en_core_web_sm")  # might need to use large?
 
 scraped_data = pd.read_csv("scraped_info.csv")
 
 scraped_data = scraped_data[["Title of Post", "Post Description"]]
 
-#remove any not-utf* encoded characters
+# remove any not-utf* encoded characters
 scraped_data["Title of Post"] = scraped_data["Title of Post"].str.encode("ascii", "ignore").str.decode("ascii")
 scraped_data["Post Description"] = scraped_data["Post Description"].str.encode("ascii", "ignore").str.decode("ascii")
-
 
 titles = scraped_data["Title of Post"]
 titles = titles.tolist()
 
 descriptions = scraped_data["Post Description"]
 descriptions = descriptions.tolist()
-
-
 
 organisations_titles = []
 
@@ -41,7 +37,7 @@ for title in tqdm.tqdm(titles):
 print("titles")
 top_organisations_titles = Counter(organisations_titles)
 top_organisations_titles_ordered = sorted(top_organisations_titles.items(), key=operator.itemgetter(1), reverse=True)
-top_ten_organisations = top_organisations_titles_ordered[0:10]
+top_ten_organisations = top_organisations_titles_ordered[0:5]
 print(top_ten_organisations)
 
 top_organisations_dict = dict(top_ten_organisations)
@@ -58,9 +54,19 @@ plt.ylabel("Frequency")
 plt.title("Most common entities recognised in scraped database")
 plt.show()
 
-columns = ["Title of Post", "Post Decsription"]
+column_names = ["Title of Post", "Post Description"]
 
-filtared_dataframe = pd.Dataframe()
+filtered_data = pd.DataFrame(columns=column_names)
 
+for organisation in organisations_list:
+    try:
+        for i in range(len(scraped_data)):
+            post = scraped_data.iloc[i]
+            if organisation in post["Title of Post"]:
+                filtered_data = filtered_data.append({"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]}, ignore_index=True)
+                # filtered_data = filtered_data.append({"Post Description": post["Post Description"]}, ignore_index=True)
+    except:
+        pass
 
-
+print(filtered_data)
+print("hello")
