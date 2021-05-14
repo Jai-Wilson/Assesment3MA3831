@@ -1,3 +1,8 @@
+"""This file extracts the top 5 most mentioned organisations recognised using named entity reocgnition. Of these
+extracted blog posts, it then puts data into 5 different dataframes. Each dataframe contains only posts specific
+to that brand of car. Overall, the end product is 5 dataframes/csv files that contains posts relevant ot the top 5
+extracted entities (car brands)"""
+
 import spacy
 import pandas as pd
 import nltk
@@ -7,7 +12,8 @@ from collections import Counter
 import operator
 import matplotlib.pyplot as plt
 
-nlp = spacy.load("en_core_web_sm")  # might need to use large?
+nlp = spacy.load("en_core_web_sm")
+# might need to use large?
 
 scraped_data = pd.read_csv("scraped_info.csv")
 
@@ -56,17 +62,45 @@ plt.show()
 
 column_names = ["Title of Post", "Post Description"]
 
-filtered_data = pd.DataFrame(columns=column_names)
+filtered_data_first = pd.DataFrame(columns=column_names)
+filtered_data_second = pd.DataFrame(columns=column_names)
+filtered_data_third = pd.DataFrame(columns=column_names)
+filtered_data_fourth = pd.DataFrame(columns=column_names)
+filtered_data_fifth = pd.DataFrame(columns=column_names)
 
-for organisation in organisations_list:
+for organisation in tqdm.tqdm(organisations_list):
     try:
         for i in range(len(scraped_data)):
             post = scraped_data.iloc[i]
             if organisation in post["Title of Post"]:
-                filtered_data = filtered_data.append({"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]}, ignore_index=True)
-                # filtered_data = filtered_data.append({"Post Description": post["Post Description"]}, ignore_index=True)
+                if organisation == organisations_list[0]:
+                    filtered_data_first = filtered_data_first.append(
+                        {"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]},
+                        ignore_index=True)
+                elif organisation == organisations_list[1]:
+                    filtered_data_second = filtered_data_second.append(
+                        {"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]},
+                        ignore_index=True)
+                elif organisation == organisations_list[2]:
+                    filtered_data_third = filtered_data_third.append(
+                        {"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]},
+                        ignore_index=True)
+                elif organisation == organisations_list[3]:
+                    filtered_data_fourth = filtered_data_fourth.append(
+                        {"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]},
+                        ignore_index=True)
+                elif organisation == organisations_list[4]:
+                    filtered_data_fifth = filtered_data_fifth.append(
+                        {"Title of Post": post["Title of Post"], "Post Description": post["Post Description"]},
+                        ignore_index=True)
+
     except:
         pass
 
-print(filtered_data)
-print("hello")
+filtered_data_first.to_csv("Top brand.csv", index=False)
+filtered_data_second.to_csv("Second brand.csv", index=False)
+filtered_data_third.to_csv("Third brand.csv", index=False)
+filtered_data_fourth.to_csv("Fourth brand.csv", index=False)
+filtered_data_fifth.to_csv("Fifth brand.csv", index=False)
+
+print("Finished successfully")

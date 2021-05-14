@@ -1,3 +1,7 @@
+"""File that scrapes the Eric the Car guy. The specific page that is scraped is a service and repairs forum.
+This forum and page was chosen as this page will mention specifc car brands, models, hat part is failing and
+verbs associated with the parts that are failing."""
+
 import bs4
 from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen as uReq

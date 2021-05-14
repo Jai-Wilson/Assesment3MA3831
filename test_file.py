@@ -1,3 +1,5 @@
+"""Test file to test code before it is implemented into assignment. Mianly to make sure that nothing breaks before
+I mess with my data"""
 import spacy
 import pandas as pd
 import nltk

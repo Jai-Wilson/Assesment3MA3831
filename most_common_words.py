@@ -1,3 +1,6 @@
+"""File to extract the most common  words that appeared in the database after stop word removal for data exploration
+purposes, and to allow a user to undertsand the data better."""
+
 import operator
 import pandas as pd
 from collections import Counter
