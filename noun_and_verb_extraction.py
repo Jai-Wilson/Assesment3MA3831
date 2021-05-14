@@ -78,7 +78,7 @@ fifth_dataframe = lemmatise_dataset(fifth_dataframe)
 
 
 
-descriptions = fourth_dataframe["Post Description"]
+descriptions = top_dataframe["Post Description"]
 descriptions = descriptions.tolist()
 top_nouns = []
 
