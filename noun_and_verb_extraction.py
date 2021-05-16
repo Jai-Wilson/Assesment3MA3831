@@ -102,9 +102,42 @@ for i in range(0, 5):
     top_nouns.append(top_nouns_ordered)
 
 # print the list vertically to be seen easier from the user
-for a, b, c, d, e in zip(*top_nouns):
-    print(a, b, c, d, e)
 
+print(*top_nouns, sep="\n")
 
+# Extract verbs
+
+# for i in range(len(top_nouns)):
+#     #access the relevant nouns with list comprehension
+#     nouns = [new_tuple[0] for new_tuple in top_nouns[i]]
+#
+#     #select the relevant dataframe
+#     if i == 0:
+#         descriptions = top_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif i == 1:
+#         descriptions = second_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif i == 2:
+#         descriptions = third_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif i == 3:
+#         descriptions = fourth_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif i == 4:
+#         descriptions = fifth_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#
+#     #iterate over the descriptions
+#     current_verbs = []
+#     for description in descriptions:
+#         # iterate over the relevant nouns
+#         for noun in nouns:
+#             # if one of the selected nouns
+#             if noun in description:
+#                 words = nlp(description)
+#                 for word in words:
+#                     if word.pos == "VERB":
+#                         current_verbs.append(word.text)
 
 

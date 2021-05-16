@@ -1,4 +1,5 @@
-'''A simple document for storing code that may/may not be used for the NLP tasks'''
+'''A simple document for storing code that may/may not be used for the NLP tasks. This document is not
+intended to be run or to add more meaning to the task, but simply for my assistance'''
 
 # descriptions = top_dataframe["Post Description"]
 # descriptions = descriptions.tolist()
