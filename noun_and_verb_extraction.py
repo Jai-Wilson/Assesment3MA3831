@@ -91,5 +91,5 @@ for description in tqdm.tqdm(descriptions):
 print(top_nouns)
 top_nouns_found = Counter(top_nouns)
 top_nouns_ordered = sorted(top_nouns_found.items(), key=operator.itemgetter(1), reverse=True)
-top__nouns_ordered = top_nouns_ordered[0:5]
+top_nouns_ordered = top_nouns_ordered[0:5]
 print(top_nouns_ordered)
