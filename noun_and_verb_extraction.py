@@ -105,6 +105,39 @@ for i in range(0, 5):
 
 print(*top_nouns, sep="\n")
 
+nouns = [new_tuple[0] for new_tuple in top_nouns[0]] # nouns list needs to be changed here
+new_descriptions = top_dataframe["Post Description"]
+new_descriptions = new_descriptions.tolist()
+
+
+top_current_verbs = []
+for i in range(len(nouns)):
+    current_verbs = []
+    for description in new_descriptions:
+        current_noun = nouns[i]
+        #if noun is found in a description
+        if current_noun in description:
+            # split the description at the full stops to extract individual sentences of the description
+            description = description.split(".")
+            for sentence in description:
+
+                # if the noun is found in the sentence, find verbs, adverbs and adjectives in that sentence. These parts
+                # of speech are chosen as they will describe what is being talked about with that specific noun
+                if current_noun in sentence:
+                    words = nlp(sentence)
+                    for word in words:
+                        if word.pos_ == "VERB" or word.pos_ == "ADV" or word.pos_ == "ADJ":
+                            current_verbs.append(word.text)
+    top_verbs_found = Counter(current_verbs)
+    top_verbs_ordered = sorted(top_verbs_found.items(), key=operator.itemgetter(1), reverse=True)
+    top_verb = top_verbs_ordered[0]
+    top_current_verbs.append(top_verb)
+print(top_current_verbs)
+
+
+
+
+
 # Extract verbs
 
 # for i in range(len(top_nouns)):
