@@ -41,6 +41,25 @@ def lemmatise_dataset(dataset):
         dataset.iloc[i]["Post Description"] = lemmatized_output
 
         return dataset
+# def get_descriptions(index):
+#     if index == 0:
+#         descriptions = top_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif index == 1:
+#         descriptions = second_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif index == 2:
+#         descriptions = third_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif index == 3:
+#         descriptions = fourth_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#     elif index == 4:
+#         descriptions = fifth_dataframe["Post Description"]
+#         descriptions = descriptions.tolist()
+#
+#     return descriptions
+
 
 
 # add common car terms to stop words list as they do nor provide information on part failures
@@ -48,6 +67,7 @@ stop_words.add('car')
 stop_words.add('problem')
 stop_words.add('issue')
 stop_words.add("Thanks")
+
 
 top_dataframe = pd.read_csv("Top brand.csv")
 second_dataframe = pd.read_csv("Second brand.csv")
@@ -105,72 +125,51 @@ for i in range(0, 5):
 
 print(*top_nouns, sep="\n")
 
-nouns = [new_tuple[0] for new_tuple in top_nouns[0]] # nouns list needs to be changed here
-new_descriptions = top_dataframe["Post Description"]
-new_descriptions = new_descriptions.tolist()
+top_verbs = []
 
+for i in range(0, 5):
+    if i == 0:
+        new_descriptions = top_dataframe["Post Description"]
+        new_descriptions = new_descriptions.tolist()
+    elif i == 1:
+        new_descriptions = second_dataframe["Post Description"]
+        new_descriptions = new_descriptions.tolist()
+    elif i == 2:
+        new_descriptions = third_dataframe["Post Description"]
+        new_descriptions = new_descriptions.tolist()
+    elif i == 3:
+        new_descriptions = fourth_dataframe["Post Description"]
+        new_descriptions = new_descriptions.tolist()
+    elif i == 4:
+        new_descriptions = fifth_dataframe["Post Description"]
+        new_descriptions = new_descriptions.tolist()
 
-top_current_verbs = []
-for i in range(len(nouns)):
-    current_verbs = []
-    for description in new_descriptions:
-        current_noun = nouns[i]
-        #if noun is found in a description
-        if current_noun in description:
-            # split the description at the full stops to extract individual sentences of the description
-            description = description.split(".")
-            for sentence in description:
+    nouns = [new_tuple[0] for new_tuple in top_nouns[i]]  # nouns list needs to be changed here
 
-                # if the noun is found in the sentence, find verbs, adverbs and adjectives in that sentence. These parts
-                # of speech are chosen as they will describe what is being talked about with that specific noun
-                if current_noun in sentence:
-                    words = nlp(sentence)
-                    for word in words:
-                        if word.pos_ == "VERB" or word.pos_ == "ADV" or word.pos_ == "ADJ":
-                            current_verbs.append(word.text)
-    top_verbs_found = Counter(current_verbs)
-    top_verbs_ordered = sorted(top_verbs_found.items(), key=operator.itemgetter(1), reverse=True)
-    top_verb = top_verbs_ordered[0]
-    top_current_verbs.append(top_verb)
-print(top_current_verbs)
+    top_current_verbs = []
+    for i in range(len(nouns)):
+        current_verbs = []
+        for description in new_descriptions:
+            current_noun = nouns[i]
+            # if noun is found in a description
+            if current_noun in description:
+                # split the description at the full stops to extract individual sentences of the description
+                description = description.split(".")
+                for sentence in description:
 
-
-
-
-
-# Extract verbs
-
-# for i in range(len(top_nouns)):
-#     #access the relevant nouns with list comprehension
-#     nouns = [new_tuple[0] for new_tuple in top_nouns[i]]
-#
-#     #select the relevant dataframe
-#     if i == 0:
-#         descriptions = top_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif i == 1:
-#         descriptions = second_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif i == 2:
-#         descriptions = third_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif i == 3:
-#         descriptions = fourth_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif i == 4:
-#         descriptions = fifth_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#
-#     #iterate over the descriptions
-#     current_verbs = []
-#     for description in descriptions:
-#         # iterate over the relevant nouns
-#         for noun in nouns:
-#             # if one of the selected nouns
-#             if noun in description:
-#                 words = nlp(description)
-#                 for word in words:
-#                     if word.pos == "VERB":
-#                         current_verbs.append(word.text)
-
-
+                    # if the noun is found in the sentence, find verbs, adverbs and adjectives in that sentence. These
+                    # parts of speech are chosen as they will describe what is being talked about with that specific
+                    # noun
+                    if current_noun in sentence:
+                        words = nlp(sentence)
+                        for word in words:
+                            if word.pos_ == "VERB" or word.pos_ == "ADV" or word.pos_ == "ADJ":
+                                current_verbs.append(word.text)
+        top_verbs_found = Counter(current_verbs)
+        top_verbs_ordered = sorted(top_verbs_found.items(), key=operator.itemgetter(1), reverse=True)
+        top_verb = top_verbs_ordered[0]
+        top_current_verbs.append(top_verb)
+    top_verbs.append(top_current_verbs)
+print(*top_verbs, sep="\n")
+# here, the top verb/describing word for each of the 5 nouns is found, as a list of 5 values. Append each of these lists
+# to the top verbs list. So that the top verbs list contains 5 lists of verbs
