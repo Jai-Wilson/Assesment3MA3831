@@ -15,6 +15,9 @@ nlp = spacy.load("en_core_web_sm")
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
+def merge_lists(list1, list2):
+    merged_list = [(list1[n], list2[n]) for n in range(0, len(list1))]
+    return merged_list
 
 def remove_stop_words(dataset):
     for i in range(len(dataset)):
@@ -41,24 +44,24 @@ def lemmatise_dataset(dataset):
         dataset.iloc[i]["Post Description"] = lemmatized_output
 
         return dataset
-# def get_descriptions(index):
-#     if index == 0:
-#         descriptions = top_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif index == 1:
-#         descriptions = second_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif index == 2:
-#         descriptions = third_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif index == 3:
-#         descriptions = fourth_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#     elif index == 4:
-#         descriptions = fifth_dataframe["Post Description"]
-#         descriptions = descriptions.tolist()
-#
-#     return descriptions
+def get_descriptions(index):
+    if index == 0:
+        descriptions = top_dataframe["Post Description"]
+        descriptions = descriptions.tolist()
+    elif index == 1:
+        descriptions = second_dataframe["Post Description"]
+        descriptions = descriptions.tolist()
+    elif index == 2:
+        descriptions = third_dataframe["Post Description"]
+        descriptions = descriptions.tolist()
+    elif index == 3:
+        descriptions = fourth_dataframe["Post Description"]
+        descriptions = descriptions.tolist()
+    elif index == 4:
+        descriptions = fifth_dataframe["Post Description"]
+        descriptions = descriptions.tolist()
+
+    return descriptions
 
 
 
@@ -93,21 +96,22 @@ fifth_dataframe = lemmatise_dataset(fifth_dataframe)
 top_nouns = []
 
 for i in range(0, 5):
-    if i == 0:
-        descriptions = top_dataframe["Post Description"]
-        descriptions = descriptions.tolist()
-    elif i == 1:
-        descriptions = second_dataframe["Post Description"]
-        descriptions = descriptions.tolist()
-    elif i == 2:
-        descriptions = third_dataframe["Post Description"]
-        descriptions = descriptions.tolist()
-    elif i == 3:
-        descriptions = fourth_dataframe["Post Description"]
-        descriptions = descriptions.tolist()
-    elif i == 4:
-        descriptions = fifth_dataframe["Post Description"]
-        descriptions = descriptions.tolist()
+    # if i == 0:
+    #     descriptions = top_dataframe["Post Description"]
+    #     descriptions = descriptions.tolist()
+    # elif i == 1:
+    #     descriptions = second_dataframe["Post Description"]
+    #     descriptions = descriptions.tolist()
+    # elif i == 2:
+    #     descriptions = third_dataframe["Post Description"]
+    #     descriptions = descriptions.tolist()
+    # elif i == 3:
+    #     descriptions = fourth_dataframe["Post Description"]
+    #     descriptions = descriptions.tolist()
+    # elif i == 4:
+    #     descriptions = fifth_dataframe["Post Description"]
+    #     descriptions = descriptions.tolist()
+    descriptions = get_descriptions(i)
     current_nouns = []
     for description in tqdm.tqdm(descriptions):
         words = nlp(description)
@@ -128,21 +132,26 @@ print(*top_nouns, sep="\n")
 top_verbs = []
 
 for i in range(0, 5):
-    if i == 0:
-        new_descriptions = top_dataframe["Post Description"]
-        new_descriptions = new_descriptions.tolist()
-    elif i == 1:
-        new_descriptions = second_dataframe["Post Description"]
-        new_descriptions = new_descriptions.tolist()
-    elif i == 2:
-        new_descriptions = third_dataframe["Post Description"]
-        new_descriptions = new_descriptions.tolist()
-    elif i == 3:
-        new_descriptions = fourth_dataframe["Post Description"]
-        new_descriptions = new_descriptions.tolist()
-    elif i == 4:
-        new_descriptions = fifth_dataframe["Post Description"]
-        new_descriptions = new_descriptions.tolist()
+    # if i == 0:
+    #     new_descriptions = top_dataframe["Post Description"]
+    #     new_descriptions = new_descriptions.tolist()
+    #     descriptions = get_descriptions(i)
+    # elif i == 1:
+    #     new_descriptions = second_dataframe["Post Description"]
+    #     new_descriptions = new_descriptions.tolist()
+    #     descriptions = get_descriptions(i)
+    # elif i == 2:
+    #     new_descriptions = third_dataframe["Post Description"]
+    #     new_descriptions = new_descriptions.tolist()
+    #     descriptions = get_descriptions(i)
+    # elif i == 3:
+    #     new_descriptions = fourth_dataframe["Post Description"]
+    #     new_descriptions = new_descriptions.tolist()
+    #     descriptions = get_descriptions(i)
+    # elif i == 4:
+    #     new_descriptions = fifth_dataframe["Post Description"]
+    #     new_descriptions = new_descriptions.tolist()
+    new_descriptions = get_descriptions(i)
 
     nouns = [new_tuple[0] for new_tuple in top_nouns[i]]  # nouns list needs to be changed here
 
@@ -173,3 +182,10 @@ for i in range(0, 5):
 print(*top_verbs, sep="\n")
 # here, the top verb/describing word for each of the 5 nouns is found, as a list of 5 values. Append each of these lists
 # to the top verbs list. So that the top verbs list contains 5 lists of verbs
+top_nouns_and_verbs_found = []
+for i in range(0,5):
+    list1 = [a_top_nouns[0] for a_top_nouns in top_nouns[i]]
+    list2 = [a_top_verbs[0] for a_top_verbs in top_verbs[i]]
+    merged_list = merge_lists(list1, list2)
+    top_nouns_and_verbs_found.append(merged_list)
+print(*top_nouns_and_verbs_found, sep="\n")
