@@ -1,27 +1,29 @@
 """File to extract the most common nouns and verbs"""
 
-import spacy
-import pandas as pd
-import nltk
-from nltk import word_tokenize, pos_tag, ne_chunk
-from nltk.corpus import stopwords
-import tqdm
-from collections import Counter
 import operator
+from collections import Counter
+
+import nltk
+import pandas as pd
+import spacy
+import tqdm
+from nltk import word_tokenize
+from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-import matplotlib.pyplot as plt
 
 nlp = spacy.load("en_core_web_sm")
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 
+
 def merge_lists(list1, list2):
-    merged_list = [(list1[n], list2[n]) for n in range(0, len(list1))]
-    return merged_list
+    combined_list = [(list1[n], list2[n]) for n in range(0, len(list1))]
+    return combined_list
+
 
 def remove_stop_words(dataset):
-    for i in range(len(dataset)):
-        current_description = dataset.iloc[i]["Post Description"]
+    for j in range(len(dataset)):
+        current_description = dataset.iloc[j]["Post Description"]
 
         tokenised_description = word_tokenize(current_description)
         filtered_description = []
@@ -31,7 +33,7 @@ def remove_stop_words(dataset):
                 filtered_description.append(word)
         new_description = " ".join(filtered_description)
 
-        dataset.iloc[i]["Post Description"] = new_description
+        dataset.iloc[j]["Post Description"] = new_description
 
     return dataset
 
@@ -44,6 +46,8 @@ def lemmatise_dataset(dataset):
         dataset.iloc[i]["Post Description"] = lemmatized_output
 
         return dataset
+
+
 def get_descriptions(index):
     if index == 0:
         descriptions = top_dataframe["Post Description"]
@@ -64,20 +68,20 @@ def get_descriptions(index):
     return descriptions
 
 
-
 # add common car terms to stop words list as they do nor provide information on part failures
 stop_words.add('car')
 stop_words.add('problem')
 stop_words.add('issue')
 stop_words.add("Thanks")
 
-
+# load in the dataframes from the csv files
 top_dataframe = pd.read_csv("Top brand.csv")
 second_dataframe = pd.read_csv("Second brand.csv")
 third_dataframe = pd.read_csv("Third brand.csv")
 fourth_dataframe = pd.read_csv("Fourth brand.csv")
 fifth_dataframe = pd.read_csv("Fifth brand.csv")
 
+# remove stop words and lemmatize the dataset
 top_dataframe = remove_stop_words(top_dataframe)
 top_dataframe = lemmatise_dataset(top_dataframe)
 
@@ -96,24 +100,9 @@ fifth_dataframe = lemmatise_dataset(fifth_dataframe)
 top_nouns = []
 
 for i in range(0, 5):
-    # if i == 0:
-    #     descriptions = top_dataframe["Post Description"]
-    #     descriptions = descriptions.tolist()
-    # elif i == 1:
-    #     descriptions = second_dataframe["Post Description"]
-    #     descriptions = descriptions.tolist()
-    # elif i == 2:
-    #     descriptions = third_dataframe["Post Description"]
-    #     descriptions = descriptions.tolist()
-    # elif i == 3:
-    #     descriptions = fourth_dataframe["Post Description"]
-    #     descriptions = descriptions.tolist()
-    # elif i == 4:
-    #     descriptions = fifth_dataframe["Post Description"]
-    #     descriptions = descriptions.tolist()
-    descriptions = get_descriptions(i)
+    post_descriptions = get_descriptions(i)
     current_nouns = []
-    for description in tqdm.tqdm(descriptions):
+    for description in tqdm.tqdm(post_descriptions):
         words = nlp(description)
         for word in words:
             # print(word.text, word.pos_)
@@ -132,40 +121,21 @@ print(*top_nouns, sep="\n")
 top_verbs = []
 
 for i in range(0, 5):
-    # if i == 0:
-    #     new_descriptions = top_dataframe["Post Description"]
-    #     new_descriptions = new_descriptions.tolist()
-    #     descriptions = get_descriptions(i)
-    # elif i == 1:
-    #     new_descriptions = second_dataframe["Post Description"]
-    #     new_descriptions = new_descriptions.tolist()
-    #     descriptions = get_descriptions(i)
-    # elif i == 2:
-    #     new_descriptions = third_dataframe["Post Description"]
-    #     new_descriptions = new_descriptions.tolist()
-    #     descriptions = get_descriptions(i)
-    # elif i == 3:
-    #     new_descriptions = fourth_dataframe["Post Description"]
-    #     new_descriptions = new_descriptions.tolist()
-    #     descriptions = get_descriptions(i)
-    # elif i == 4:
-    #     new_descriptions = fifth_dataframe["Post Description"]
-    #     new_descriptions = new_descriptions.tolist()
-    new_descriptions = get_descriptions(i)
+
+    new_post_descriptions = get_descriptions(i)
 
     nouns = [new_tuple[0] for new_tuple in top_nouns[i]]  # nouns list needs to be changed here
 
     top_current_verbs = []
     for i in range(len(nouns)):
         current_verbs = []
-        for description in new_descriptions:
+        for description in new_post_descriptions:
             current_noun = nouns[i]
             # if noun is found in a description
             if current_noun in description:
                 # split the description at the full stops to extract individual sentences of the description
                 description = description.split(".")
                 for sentence in description:
-
                     # if the noun is found in the sentence, find verbs, adverbs and adjectives in that sentence. These
                     # parts of speech are chosen as they will describe what is being talked about with that specific
                     # noun
@@ -183,9 +153,9 @@ print(*top_verbs, sep="\n")
 # here, the top verb/describing word for each of the 5 nouns is found, as a list of 5 values. Append each of these lists
 # to the top verbs list. So that the top verbs list contains 5 lists of verbs
 top_nouns_and_verbs_found = []
-for i in range(0,5):
-    list1 = [a_top_nouns[0] for a_top_nouns in top_nouns[i]]
-    list2 = [a_top_verbs[0] for a_top_verbs in top_verbs[i]]
-    merged_list = merge_lists(list1, list2)
+for i in range(0, 5):
+    nouns_list = [a_top_nouns[0] for a_top_nouns in top_nouns[i]]
+    verbs_list = [a_top_verbs[0] for a_top_verbs in top_verbs[i]]
+    merged_list = merge_lists(nouns_list, verbs_list)
     top_nouns_and_verbs_found.append(merged_list)
 print(*top_nouns_and_verbs_found, sep="\n")
