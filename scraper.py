@@ -72,7 +72,8 @@ for j in tqdm.tqdm(range(501, 531)):
         except:
             pass
 
-        # some dickhead decided to post url's, this is so annoying, do a try catch and if it catches just pass it
+        # some users might post a url to another site, this causes the program to crash. If this occurs, simply pass
+        # over the post and disregard it.
         try:
 
             date_posted = date_posted.replace(", ", " ")

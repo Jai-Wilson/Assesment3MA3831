@@ -9,7 +9,7 @@ from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
 from os import path
 from PIL import Image
-from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+from wordcloud import WordCloud
 import string
 
 
@@ -38,7 +38,10 @@ def listToString(s):
 
     # traverse in the string
     for ele in s:
-        str1 = str1 + " " + ele
+        try:
+            str1 = str1 + " " + ele
+        except:
+            pass
 
         # return string
     return str1
@@ -174,3 +177,13 @@ filtered_descriptions = column_to_list(filtered_descriptions)
 plot_most_common_words(filtered_titles)
 plot_most_common_words(filtered_descriptions)
 
+temp = ""
+for description in descriptions:
+    try:
+        temp = temp + " " + description
+    except:
+        pass
+print(temp)
+wc = WordCloud(background_color='white', height=600, width=400)
+wc.generate(temp)
+wc.to_file('wordcloud_image.png')
