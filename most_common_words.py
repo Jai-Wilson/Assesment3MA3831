@@ -21,6 +21,7 @@ def get_top_words(input_string):
     top_words_ordered = sorted(top_words.items(), key=operator.itemgetter(1), reverse=True)
     # keep the top twenty elements
     top_twenty = top_words_ordered[0:20]
+    print(top_twenty)
     return top_twenty
 
 
@@ -94,9 +95,6 @@ def plot_most_common_words(plotting_string, method):
     top_twenty_after_stop = get_top_words(plotting_string)
     top_twenty_after_stop_dict = dict(top_twenty_after_stop)
     keys = top_twenty_after_stop_dict.keys()
-    top_twenty_after_stop = get_top_words(plotting_string)
-    top_twenty_after_stop_dict = dict(top_twenty_after_stop)
-    keys = top_twenty_after_stop_dict.keys()
     values = top_twenty_after_stop_dict.values()
     plt.bar(keys, values)
     plt.xticks(rotation=75)
@@ -115,8 +113,8 @@ scraped_data = scraped_data[["Title of Post", "Post Description"]]
 scraped_data["Title of Post"] = scraped_data["Title of Post"].str.encode("ascii", "ignore").str.decode("ascii")
 scraped_data["Post Description"] = scraped_data["Post Description"].str.encode("ascii", "ignore").str.decode("ascii")
 
-# change everything in dataframe to lowercase
-scraped_data["Title of Post"] = scraped_data["Title of Post"].str.lower()
+# change everything in descriptions dataframe to lowercase. Don't change titles dataframe to lowercase as it will not
+# be changed for NER analysis
 scraped_data["Post Description"] = scraped_data["Post Description"].str.lower()
 
 # extract titles

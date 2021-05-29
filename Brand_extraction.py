@@ -11,6 +11,7 @@ import tqdm
 from collections import Counter
 import operator
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 nlp = spacy.load("en_core_web_sm")
 # might need to use large?
@@ -43,10 +44,10 @@ for title in tqdm.tqdm(titles):
 print("titles")
 top_organisations_titles = Counter(organisations_titles)
 top_organisations_titles_ordered = sorted(top_organisations_titles.items(), key=operator.itemgetter(1), reverse=True)
-top_ten_organisations = top_organisations_titles_ordered[0:5]
-print(top_ten_organisations)
+top_five_organisations = top_organisations_titles_ordered[0:5]
+print(top_five_organisations)
 
-top_organisations_dict = dict(top_ten_organisations)
+top_organisations_dict = dict(top_five_organisations)
 
 # extract the most common brands as a list
 organisations_list = list(top_organisations_dict.keys())
@@ -59,6 +60,10 @@ plt.xlabel("Most commonly recognised entities")
 plt.ylabel("Frequency")
 plt.title("Most common entities recognised in scraped database")
 plt.show()
+
+wc = WordCloud(background_color='white', height=400, width=600)
+wc.generate(" ".join(organisations_titles))
+wc.to_file("wordcloud_entities.png")
 
 column_names = ["Title of Post", "Post Description"]
 

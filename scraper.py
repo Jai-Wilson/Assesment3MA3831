@@ -16,8 +16,8 @@ headers = "Date Posted,Author,Title of Post,Post Description\n"
 
 f.write(headers)
 
-# got to page 501
 
+# range of for loop is page start and page end
 for j in tqdm.tqdm(range(501, 531)):
     print("Up to page {}".format(j))
     if j != 1:
@@ -37,7 +37,7 @@ for j in tqdm.tqdm(range(501, 531)):
             page_soup = soup(page_html, "html.parser")
 
             # grabs each topic
-            # find all where class is bhp-body
+            # find all where class is bhp-topic-title
             containers = page_soup.findAll("li", {"class": "bbp-topic-title"})
             # inspect each container
             # inspect the a tag
