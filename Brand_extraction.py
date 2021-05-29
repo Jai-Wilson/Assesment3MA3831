@@ -5,8 +5,6 @@ extracted entities (car brands)"""
 
 import spacy
 import pandas as pd
-import nltk
-from nltk import word_tokenize, pos_tag, ne_chunk
 import tqdm
 from collections import Counter
 import operator
@@ -63,6 +61,9 @@ plt.show()
 
 wc = WordCloud(background_color='white', height=400, width=600)
 wc.generate(" ".join(organisations_titles))
+plt.imshow(wc)
+plt.axis('off')
+plt.show()
 wc.to_file("wordcloud_entities.png")
 
 column_names = ["Title of Post", "Post Description"]

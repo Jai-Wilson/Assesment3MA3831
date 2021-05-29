@@ -17,11 +17,13 @@ lemmatizer = WordNetLemmatizer()
 
 
 def merge_lists(list1, list2):
+    """A function to merge lists together to tuples"""
     combined_list = [(list1[n], list2[n]) for n in range(0, len(list1))]
     return combined_list
 
 
 def remove_stop_words(dataset):
+    """A function to remove stop words"""
     for j in range(len(dataset)):
         current_description = dataset.iloc[j]["Post Description"]
 
@@ -39,6 +41,7 @@ def remove_stop_words(dataset):
 
 
 def lemmatise_dataset(dataset):
+    """A function to lemmatise the dataset"""
     for i in range(len(dataset)):
         current_description = dataset.iloc[i]["Post Description"]
         word_list = nltk.word_tokenize(current_description)
@@ -49,6 +52,7 @@ def lemmatise_dataset(dataset):
 
 
 def get_descriptions(index):
+    """A function to get respective descriptions depending on a given index"""
     if index == 0:
         descriptions = top_dataframe["Post Description"]
         descriptions = descriptions.tolist()
@@ -81,7 +85,7 @@ third_dataframe = pd.read_csv("Third brand.csv")
 fourth_dataframe = pd.read_csv("Fourth brand.csv")
 fifth_dataframe = pd.read_csv("Fifth brand.csv")
 
-# remove stop words and lemmatize the dataset
+# remove stop words and lemmatize all datasets
 top_dataframe = remove_stop_words(top_dataframe)
 top_dataframe = lemmatise_dataset(top_dataframe)
 
@@ -97,25 +101,29 @@ fourth_dataframe = lemmatise_dataset(fourth_dataframe)
 fifth_dataframe = remove_stop_words(fifth_dataframe)
 fifth_dataframe = lemmatise_dataset(fifth_dataframe)
 
+# initialise top_nouns list
 top_nouns = []
 
 for i in range(0, 5):
+    # iterate over csv files
     post_descriptions = get_descriptions(i)
     current_nouns = []
+    # iterate over all descriptions in the dataset
     for description in tqdm.tqdm(post_descriptions):
+        # apply the algorithm to the description
         words = nlp(description)
         for word in words:
-            # print(word.text, word.pos_)
             if word.pos_ == "NOUN":
+                # if a noun is found, append it to the list
                 current_nouns.append(word.text)
+    # find the most frequent nouns for this respective csv file
     top_nouns_found = Counter(current_nouns)
     top_nouns_ordered = sorted(top_nouns_found.items(), key=operator.itemgetter(1), reverse=True)
     top_nouns_ordered = top_nouns_ordered[0:5]
-    # print(top_nouns_ordered)
+    # add the most frequent nuns to the top_nouns list
     top_nouns.append(top_nouns_ordered)
 
 # print the list vertically to be seen easier from the user
-
 print(*top_nouns, sep="\n")
 
 top_verbs = []

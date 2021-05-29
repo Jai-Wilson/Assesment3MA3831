@@ -7,8 +7,6 @@ from collections import Counter
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import matplotlib.pyplot as plt
-from os import path
-from PIL import Image
 from wordcloud import WordCloud
 import string
 
@@ -161,6 +159,9 @@ for description in descriptions:
         pass
 wc = WordCloud(background_color='white', height=400, width=600)
 wc.generate(desc_string)
+plt.imshow(wc)
+plt.axis('off')
+plt.show()
 wc.to_file('wordcloud_descriptions.png')
 
 title_string = ""
@@ -171,4 +172,8 @@ for title in titles:
         pass
 wc = WordCloud(background_color='white', height=400, width=600)
 wc.generate(title_string)
+plt.imshow(wc)
+plt.axis('off')
+plt.show()
 wc.to_file('wordcloud_titles.png')
+
